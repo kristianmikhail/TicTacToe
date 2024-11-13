@@ -33,6 +33,9 @@ data class Player(
      var name: String=""
 )
 
+fun test() {
+    //example
+}
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
