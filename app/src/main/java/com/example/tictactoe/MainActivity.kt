@@ -35,7 +35,7 @@ data class Player(
 
 fun test() {
     //example working now
-    // hello 
+    // berra
 }
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
