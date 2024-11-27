@@ -1,5 +1,7 @@
 package com.example.tictactoe
 
+import android.app.LauncherActivity
+import android.graphics.pdf.models.ListItem
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +22,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.tictactoe.ui.theme.TicTacToeTheme
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -29,25 +34,32 @@ import kotlinx.coroutines.flow.asStateFlow
 
 
 data class Player(
-     var playerID: String ="",
      var name: String=""
 )
 
-fun test() {
-    //example working now
-    // hello 
-}
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-                MainScreen()
+            NavigationHost()
+                //MainScreen()
             }
         }
     }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NavigationHost(){
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "player"){
+        composable("player") {NewPlayerScreen(navController)}
+        composable("lobby"){LobbyScreen(navController)}
+    }
+}
+
+
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val db = Firebase.firestore
@@ -67,8 +79,33 @@ fun MainScreen() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(players) { player ->
-                Text("Name: ${player.name}")
+                ListItem(
+                    headlineText = {
+                        Text("Name:  ${player.name}")
+                    }, trailingContent = {
+                        Button(onClick = {
+                            val query =
+                                db.collection("players").whereEqualTo("playerID",)
+
+                            query.get().addOnSuccessListener { querySnapshot ->
+                                for (documentSnapshot in querySnapshot) {
+                                    documentSnapshot.reference.update("invitation", "Hello!")
+
+                                }
+                            }
+                        }) {
+                            Text("Invite")
+                        }
+                    })
             }
         }
     }
 }
+
+
+/*  Text("Name: ${player.name}")
+}
+}
+}
+}
+*/
