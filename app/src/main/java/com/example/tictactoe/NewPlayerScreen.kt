@@ -7,13 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,16 +62,15 @@ if (model.localPlayerId.value==null){
             singleLine = true
         )
         Button(
-            onClick =
-            {
+            onClick = {
                 if (playerName.isNotBlank()) {
-                    //Create new player in firebase
+                    // Create new player in firebase
                     val newPlayer = Player(name = playerName)
                     model.db.collection("players").add(newPlayer)
                         .addOnSuccessListener { documentRef ->
                             val newPlayerId = documentRef.id
 
-                            //Save playerId in shared preference
+                            // Save playerId in shared preference
                             sharedPreference.edit().putString("playerId", newPlayerId).apply()
 
                             model.localPlayerId.value = newPlayerId
@@ -87,8 +80,7 @@ if (model.localPlayerId.value==null){
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = playerName.isNotEmpty()
-        )
-        {
+        ) {
             Text("Enter Game")
         }
     }

@@ -38,7 +38,6 @@ data class Player(
 )
 
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,33 +53,6 @@ fun NavigationHost(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "player"){
         composable("player") {NewPlayerScreen(navController, model)}
-        composable("lobby"){LobbyScreen(navController)}
+        composable("lobby"){LobbyScreen(navController, model)}
     }
 }
-
-
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainScreen() {
-    val db = Firebase.firestore
-    val playerList = MutableStateFlow<List<Player>>(emptyList())
-
-    db.collection("players").addSnapshotListener { value, error ->
-        if (error != null) {
-            return@addSnapshotListener
-        }
-        if (value != null) {
-            playerList.value = value.toObjects()
-        }
-    }
-
-    val players by playerList.asStateFlow().collectAsStateWithLifecycle()
-
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding)) {
-            items(players) { player ->
-                Text("Name: ${player.name}")
-            }
-        }
-    }
-}*/
