@@ -1,9 +1,12 @@
 package com.example.tictactoe
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,9 +44,73 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
         playerName = it.name
     }
 
-    Scaffold (
-        
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("TicTacToe - $playerName")}) }
+    ) { innerPadding ->
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            items(players.entries.toList()) { (documentId, player) ->
+                if (documentId != model.localPlayerId.value) { //Dont show yourself
+                    ListItem(
+                        headlineText = {
+                            Text("Player Name: ${player.name}")
+                        },
+                        supportingText = {
+                            Text("Status: ...")
+                        },
+                        trailingContent = {
+                            var hasGame = false
+                            games.forEach { (gameId, game) ->
+                                if (game.player1Id == model.localPlayerId.value
+                                    && game.gameState == "invite"
+                                ) {
+                                    Text("Waiting for accept...")
+                                    hasGame = true
+                                } else if (game.player2Id == model.localPlayerId.value
+                                    && game.gameState == "invite"
+                                ) {
+                                    Button(onClick = {
+                                        model.db.collection("games").document(gameId)
+                                            .update("gameState", "player1_turn")
+                                            .addOnSuccessListener {
+                                                navController.navigate("game/${gameId}")
+                                            }
+                                            .addOnFailureListener {
+                                                Log.e(
+                                                    "KitoError",
+                                                    "Error updating game: $gameId"
+                                                )
+                                            }
+                                    }) {
+                                        Text("Accept invite")
+                                    }
+                                    hasGame = true
+                                }
+                            }
+                            if (!hasGame) {
+                                Button(onClick = {
+                                    model.db.collection("games")
+                                        .add(
+                                            Game(
+                                                gameState = "invite",
+                                                player1Id = model.localPlayerId.value!!,
+                                                player2Id = documentId
+                                            )
+                                        )
+                                        .addOnSuccessListener { documentRef ->
+                                            // TODO: Navigate?
+                                        }
+                                }) {
+                                    Text("Challenge")
+                                }
+                            }
+                        }
+                    )
+                }
+            }
 
+        }
+
+    }
 }
 
 
