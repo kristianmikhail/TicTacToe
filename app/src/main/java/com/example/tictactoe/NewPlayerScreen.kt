@@ -15,23 +15,35 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewPlayerScreen(navController: NavController) {
+fun NewPlayerScreen(navController: NavController, model: GameModel) {
     var playerName by remember { mutableStateOf("") }
+    val sharedPreference= LocalContext.current.getSharedPreferences("TicTacToePrefs", android.content.Context.MODE_PRIVATE)
 
+    LaunchedEffect(Unit) {
+        model.localPlayerId.value= sharedPreference.getString("playerId", null)
+        if (model.localPlayerId.value !=null){
+            navController.navigate("lobby")
+        }
+    }
+if (model.localPlayerId.value==null){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,11 +70,20 @@ fun NewPlayerScreen(navController: NavController) {
         Button(
             onClick =
             {
+                if (playerName.isNotBlank()) {
+                    //Create new player in firebase
+                    val newPlayer = Player(name = playerName)
+                    model.db.collection("players").add(newPlayer)
+                        .addOnSuccessListener { documentRef ->
+                            val newPlayerId = documentRef.id
 
+                            //Save playerId in shared preference
+                            sharedPreference.edit().putString("playerId", newPlayerId).apply()
 
-                    navController.navigate("lobby")
-
-
+                            model.localPlayerId.value = newPlayerId
+                            navController.navigate("lobby")
+                        }
+                }
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = playerName.isNotEmpty()
@@ -71,4 +92,5 @@ fun NewPlayerScreen(navController: NavController) {
             Text("Enter Game")
         }
     }
+}
 }

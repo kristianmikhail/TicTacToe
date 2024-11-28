@@ -43,17 +43,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NavigationHost()
-                //MainScreen()
+        NavigationHost()
             }
         }
     }
 
 @Composable
 fun NavigationHost(){
+    val model = GameModel()
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "player"){
-        composable("player") {NewPlayerScreen(navController)}
+        composable("player") {NewPlayerScreen(navController, model)}
         composable("lobby"){LobbyScreen(navController)}
     }
 }
@@ -79,33 +79,8 @@ fun MainScreen() {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(players) { player ->
-                ListItem(
-                    headlineText = {
-                        Text("Name:  ${player.name}")
-                    }, trailingContent = {
-                        Button(onClick = {
-                            val query =
-                                db.collection("players").whereEqualTo("playerID",)
-
-                            query.get().addOnSuccessListener { querySnapshot ->
-                                for (documentSnapshot in querySnapshot) {
-                                    documentSnapshot.reference.update("invitation", "Hello!")
-
-                                }
-                            }
-                        }) {
-                            Text("Invite")
-                        }
-                    })
+                Text("Name: ${player.name}")
             }
         }
     }
-}
-
-
-/*  Text("Name: ${player.name}")
-}
-}
-}
-}
-*/
+}*/
