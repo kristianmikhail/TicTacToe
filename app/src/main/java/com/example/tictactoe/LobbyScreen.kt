@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-
+import androidx.compose.foundation.lazy.items
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.asStateFlow
@@ -89,13 +89,9 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
                             if (!hasGame) {
                                 Button(onClick = {
                                     model.db.collection("games")
-                                        .add(
-                                            Game(
-                                                gameState = "invite",
-                                                player1Id = model.localPlayerId.value!!,
-                                                player2Id = documentId
-                                            )
-                                        )
+                                        .add(Game(gameState = "invite",
+                                            player1Id = model.localPlayerId.value!!,
+                                            player2Id = documentId))
                                         .addOnSuccessListener { documentRef ->
                                             // TODO: Navigate?
                                         }
