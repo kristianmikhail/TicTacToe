@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         setContent {
         NavigationHost()
             }
-        }
+    }
     }
 
 @Composable
@@ -54,5 +54,8 @@ fun NavigationHost(){
     NavHost(navController = navController, startDestination = "player"){
         composable("player") {NewPlayerScreen(navController, model)}
         composable("lobby"){LobbyScreen(navController, model)}
+        composable("game/{gameId}"){ backStackEntry->
+            val gameId = backStackEntry.arguments?.getString("gameId")
+            GameScreen(navController,model,gameId)
     }
 }

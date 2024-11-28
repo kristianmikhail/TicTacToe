@@ -42,7 +42,7 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
     }
 
     Scaffold (
-        
+
 
 }
 
