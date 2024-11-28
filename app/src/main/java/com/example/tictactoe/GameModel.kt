@@ -31,6 +31,7 @@ class GameModel: ViewModel() {
 
 
     fun initGame() {
+
         db.collection("players").addSnapshotListener { value, error ->
             if (error != null) {
                 return@addSnapshotListener
@@ -39,5 +40,20 @@ class GameModel: ViewModel() {
                 playerList.value = value.toObjects()
             }
         }
+
+        // Listen for games
+        db.collection("games")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+                if (value != null) {
+                    val updatedMap = value.documents.associate { doc ->
+                        doc.id to doc.toObject(Game::class.java)!!
+                    }
+                    gameMap.value = updatedMap
+                }
+            }
+
     }
 }
