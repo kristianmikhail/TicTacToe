@@ -39,7 +39,10 @@ class GameModel: ViewModel() {
                 return@addSnapshotListener
             }
             if (value != null) {
-                playerList.value = value.toObjects()
+                val updatedMap = value.documents.associate { doc ->
+                    doc.id to doc.toObject(Player::class.java)!!
+                }
+                playerMap.value = updatedMap
             }
         }
 
@@ -59,6 +62,10 @@ class GameModel: ViewModel() {
 
 
     }
+
+    // Kontrollera rader, kolumner, och diagonaler för att se om en spelare har vunnit.
+    // Kontrollera om spelet är oavgjort (alla rutor är fyllda och ingen har vunnit).
+
     fun checkWinner(board: List<Int>): Int {
         // Check rows
         for (i in 0..2) {
@@ -76,6 +83,21 @@ class GameModel: ViewModel() {
         }
 
         // Check diagonals
-        if (board)
+        if (board[0] != 0 && board[0] == board[4] && board[0] == board[8]) {
+            return board[0]
+        }
+        if (board[2] != 0 && board[2] == board[4] && board[2] == board[6]) {
+            return board[2]
+        }
+
+        // Check draw
+        if (!board.contains(0)) { // Check if all cells are filled  and no winner
+            return 3
+        }
+
+        // No winner
+        return 0
     }
+
+
 }
