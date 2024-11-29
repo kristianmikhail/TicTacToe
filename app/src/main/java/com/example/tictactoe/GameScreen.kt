@@ -90,9 +90,9 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                 //row * 3 + col
                 //i * 3 +j
 
-               /* for (i in 0..<rows) {
+                for (i in 0 until  rows) {
                     Row {
-                        for (j in 0..<cols) {
+                        for (j in 0 until  cols) {
                             Button(
                                 shape = RectangleShape,
                                 modifier = Modifier.size(100.dp).padding(2.dp),
@@ -104,14 +104,14 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                                 //Text (Cell${i*cols +j} Value: ${game.gameBoard[i* cols+j]}")
                                 if (game.gameBoard[i * cols + j] == 1) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.outline_cross:_24),
+                                        painter = painterResource(id = R.drawable.baseline_add_24),
                                         tint = Color.Red,
                                         contentDescription = "X",
                                         modifier = Modifier.size(48.dp)
                                     )
                                 } else if (game.gameBoard[i * cols + j] == 2) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.outline_cross_24),
+                                        painter = painterResource(id = R.drawable.baseline_add_24),
                                         tint = Color.Blue,
                                         contentDescription = "0",
                                         modifier = Modifier.size(48.dp)
@@ -133,4 +133,3 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
             navController.navigate("lobby")
         }
     }
-*/

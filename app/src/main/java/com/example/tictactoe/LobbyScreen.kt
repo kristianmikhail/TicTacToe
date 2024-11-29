@@ -44,16 +44,12 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
         playerName = it.name
     }
 
-<<<<<<< HEAD
-    Scaffold (
-
-=======
     Scaffold(
         topBar = { TopAppBar(title = { Text("TicTacToe - $playerName")}) }
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(players.entries.toList()) { (documentId, player) ->
-                if (documentId != model.localPlayerId.value) { //Dont show yourself
+                if (documentId != model.localPlayerId.value) { //Don show yourself
                     ListItem(
                         headlineText = {
                             Text("Player Name: ${player.name}")
@@ -80,7 +76,7 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
                                             }
                                             .addOnFailureListener {
                                                 Log.e(
-                                                    "KitoError",
+                                                    "Error",
                                                     "Error updating game: $gameId"
                                                 )
                                             }
@@ -107,8 +103,6 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
                     )
                 }
             }
->>>>>>> 36df411f502046592be0b6957ce950ed56aaed95
-
         }
 
     }
