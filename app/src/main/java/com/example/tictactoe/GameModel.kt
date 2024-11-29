@@ -76,6 +76,21 @@ class GameModel: ViewModel() {
         }
 
         // Check diagonals
-        if (board)
+        if (board[0] != 0 && board[0] == board[4] && board[0] == board[8]) {
+            return board[0]
+        }
+        if (board[2] != 0 && board[2] == board[4] && board[2] == board[6]) {
+            return board[2]
+        }
+
+        // Check draw
+        if (!board.contains(0)) { // Check if all cells are filled  and no winner
+            return 3
+        }
+
+        // No winner
+        return 0
     }
+
+    
 }
