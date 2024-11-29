@@ -39,7 +39,10 @@ class GameModel: ViewModel() {
                 return@addSnapshotListener
             }
             if (value != null) {
-                playerList.value = value.toObjects()
+                val updatedMap = value.documents.associate { doc ->
+                    doc.id to doc.toObject(Player::class.java)!!
+                }
+                playerMap.value = updatedMap
             }
         }
 
@@ -59,6 +62,10 @@ class GameModel: ViewModel() {
 
 
     }
+
+    // Kontrollera rader, kolumner, och diagonaler för att se om en spelare har vunnit.
+    // Kontrollera om spelet är oavgjort (alla rutor är fyllda och ingen har vunnit).
+
     fun checkWinner(board: List<Int>): Int {
         // Check rows
         for (i in 0..2) {
@@ -92,5 +99,5 @@ class GameModel: ViewModel() {
         return 0
     }
 
-    
+
 }
