@@ -48,14 +48,17 @@ class MainActivity : ComponentActivity() {
     }
 
 @Composable
-fun NavigationHost(){
+fun NavigationHost() {
     val model = GameModel()
+    model.initGame()
+
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "player"){
-        composable("player") {NewPlayerScreen(navController, model)}
-        composable("lobby"){LobbyScreen(navController, model)}
-        composable("game/{gameId}"){ backStackEntry->
+    NavHost(navController = navController, startDestination = "player") {
+        composable("player") { NewPlayerScreen(navController, model) }
+        composable("lobby") { LobbyScreen(navController, model) }
+        composable("game/{gameId}") { backStackEntry ->
             val gameId = backStackEntry.arguments?.getString("gameId")
-            GameScreen(navController,model,gameId)
+            GameScreen(navController, model, gameId)
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.tictactoe
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,16 +21,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
-
-
+import android.content.Context
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPlayerScreen(navController: NavController, model: GameModel) {
     var playerName by remember { mutableStateOf("") }
-    val sharedPreference= LocalContext.current.getSharedPreferences("TicTacToePrefs", android.content.Context.MODE_PRIVATE)
+    val sharedPreference= LocalContext.current.getSharedPreferences("TicTacToePrefs", Context.MODE_PRIVATE)
 
     LaunchedEffect(Unit) {
         model.localPlayerId.value= sharedPreference.getString("playerId", null)
@@ -62,26 +61,29 @@ if (model.localPlayerId.value==null){
             singleLine = true
         )
         Button(
-            onClick = {
-                if (playerName.isNotBlank()) {
-                    // Create new player in firebase
-                    val newPlayer = Player(name = playerName)
-                    model.db.collection("players").add(newPlayer)
-                        .addOnSuccessListener { documentRef ->
-                            val newPlayerId = documentRef.id
+            onClick = { if (playerName.isNotBlank()) {
+                // Create new player in Firestore
+                val newPlayer = Player(name = playerName)
 
-                            // Save playerId in shared preference
-                            sharedPreference.edit().putString("playerId", newPlayerId).apply()
+                model.db.collection("players")
+                    .add(newPlayer)
+                    .addOnSuccessListener { documentRef ->
+                        val newPlayerId = documentRef.id
 
-                            model.localPlayerId.value = newPlayerId
-                            navController.navigate("lobby")
-                        }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = playerName.isNotEmpty()
+                        // Save playerId in SharedPreferences
+
+                        sharedPreference.edit().putString("playerId", newPlayerId).apply()
+
+                        // Update local variable and navigate to lobby
+                        model.localPlayerId.value = newPlayerId
+                        navController.navigate("lobby")
+                    }.addOnFailureListener { error ->
+                        Log.e("RobinError", "Error creating player: ${error.message}")
+                    }
+            } },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Enter Game")
+            Text("Create Player")
         }
     }
 }

@@ -27,8 +27,6 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
     val players by model.playerMap.asStateFlow().collectAsStateWithLifecycle()
     val games by model.gameMap.asStateFlow().collectAsStateWithLifecycle()
 
-
-
     LaunchedEffect(games) {
         games.forEach { (gameId, game) ->
             // TODO: Popup with accept invite?

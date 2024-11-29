@@ -26,7 +26,7 @@ const val cols = 3
 class GameModel: ViewModel() {
     val db = Firebase.firestore
     var localPlayerId = mutableStateOf<String?>(null)
-    val playerList = MutableStateFlow<List<Player>>(emptyList())
+    //val playerList = MutableStateFlow<List<Player>>(emptyList())
     val playerMap = MutableStateFlow<Map<String, Player>>(emptyMap())
     val gameMap = MutableStateFlow<Map<String, Game>>(emptyMap())
 
@@ -74,6 +74,9 @@ class GameModel: ViewModel() {
             }
 
         }
+
+        //lägg if stats, att ifall en person har kört en drag, och lagt en move, så att den andra personen inte kan lägga över
+        // så om det finns redan en move, kör bara return
 
         // Check columns
         for (i in 0..2) {
