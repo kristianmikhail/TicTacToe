@@ -19,6 +19,8 @@ data class Game(
     var player2Id: String = ""
 )
 
+const val rows = 3
+const val cols = 3
 
 
 class GameModel: ViewModel() {
@@ -31,6 +33,7 @@ class GameModel: ViewModel() {
 
 
     fun initGame() {
+
         db.collection("players").addSnapshotListener { value, error ->
             if (error != null) {
                 return@addSnapshotListener
@@ -39,5 +42,40 @@ class GameModel: ViewModel() {
                 playerList.value = value.toObjects()
             }
         }
+
+        // Listen for games
+        db.collection("games")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+                if (value != null) {
+                    val updatedMap = value.documents.associate { doc ->
+                        doc.id to doc.toObject(Game::class.java)!!
+                    }
+                    gameMap.value = updatedMap
+                }
+            }
+
+
+    }
+    fun checkWinner(board: List<Int>): Int {
+        // Check rows
+        for (i in 0..2) {
+            if (board[i * 3] != 0 && board[i * 3] == board[i * 3 + 1] && board[i * 3] == board[i * 3 + 2]) {
+                return board[i * 3]
+            }
+
+        }
+
+        // Check columns
+        for (i in 0..2) {
+            if (board[i] != 0 && board[i] == board[i * 3] && board[i] == board[i + 6]) {
+                return board[i]
+            }
+        }
+
+        // Check diagonals
+        if (board)
     }
 }
