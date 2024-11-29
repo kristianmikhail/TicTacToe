@@ -63,7 +63,7 @@ class GameModel: ViewModel() {
 
     }
 
-    // Kontrollera rader, kolumner, och diagonaler för att se om en spelare har vunnit.
+    // Kontrollera rader, kolumner och diagonaler för att se om en spelare har vunnit.
     // Kontrollera om spelet är oavgjort (alla rutor är fyllda och ingen har vunnit).
 
     fun checkWinner(board: List<Int>): Int {
@@ -97,6 +97,51 @@ class GameModel: ViewModel() {
 
         // No winner
         return 0
+    }
+
+
+
+    fun checkGameState(gameId: String?, cell: Int) {
+
+        if (gameId != null) {
+            val game: Game? = gameMap.value[gameId]
+            if (game != null) {
+
+                val myTurn = game.gameState == "player1_turn" && game.player1Id == localPlayerId.value || game.gameState == "player2_turn" && game.player2Id == localPlayerId.value
+                if (!myTurn) return
+
+                val list: MutableList<Int> = game.gameBoard.toMutableList()
+
+                if (game.gameState == "player1_turn") {
+                    list[cell] = 1
+
+                } else if (game.gameState == "player2_turn") {
+                    list[cell] = 2
+                }
+                var turn = ""
+                if (game.gameState == "player1_turn") {
+                    turn = "player2_turn"
+                } else {
+                    turn = "player1_turn"
+                }
+
+                val winner = checkWinner(list.toList())
+                if (winner == 1) {
+                    turn = "player1_won"
+                } else if (winner == 2) {
+                    turn = "player2_won"
+                } else if (winner == 3) {
+                    turn = "draw"
+                }
+
+                db.collection("games").document(gameId)
+                    .update(
+                        "gameBoard", list,
+                        "gameState", turn
+                    )
+
+            }
+        }
     }
 
 
