@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -80,9 +81,9 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                         Spacer(modifier = Modifier.padding(20.dp))
 
                         Text("Player 1: ${players[game.player1Id]!!.name}")
-                        Text("Player 2: ${players[game.player1Id]!!.name}")
-                        Text("State: ${game.gameState}")
-                        Text("GameId: ${gameId}")
+                        Text("Player 2: ${players[game.player2Id]!!.name}")
+                        //Text("State: ${game.gameState}")
+                        //Text("GameId: ${gameId}")
                     }
                 }
                 Spacer(modifier = Modifier.padding(20.dp))
@@ -96,7 +97,7 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                             Button(
                                 shape = RectangleShape,
                                 modifier = Modifier.size(100.dp).padding(2.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
                                 onClick = {
                                     model.checkGameState(gameId, i * cols + j)
                                 }
@@ -104,14 +105,14 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                                 //Text (Cell${i*cols +j} Value: ${game.gameBoard[i* cols+j]}")
                                 if (game.gameBoard[i * cols + j] == 1) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.baseline_add_24),
+                                        painter = painterResource(id = R.drawable.close),
                                         tint = Color.Red,
                                         contentDescription = "X",
                                         modifier = Modifier.size(48.dp)
                                     )
                                 } else if (game.gameBoard[i * cols + j] == 2) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.baseline_add_24),
+                                        painter = painterResource(id = R.drawable.baseline_circle_24),
                                         tint = Color.Blue,
                                         contentDescription = "0",
                                         modifier = Modifier.size(48.dp)

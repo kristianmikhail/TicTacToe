@@ -33,9 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 
-data class Player(
-     var name: String=""
-)
+
 
 
 class MainActivity : ComponentActivity() {
@@ -44,8 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
         NavigationHost()
             }
-    }
-    }
+    } }
 
 @Composable
 fun NavigationHost() {

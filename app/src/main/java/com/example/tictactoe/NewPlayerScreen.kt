@@ -78,7 +78,7 @@ if (model.localPlayerId.value==null){
                         model.localPlayerId.value = newPlayerId
                         navController.navigate("lobby")
                     }.addOnFailureListener { error ->
-                        Log.e("RobinError", "Error creating player: ${error.message}")
+                        Log.e("Error", "Error creating player: ${error.message}")
                     }
             } },
             modifier = Modifier.fillMaxWidth()

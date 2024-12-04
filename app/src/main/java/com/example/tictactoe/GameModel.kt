@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 
-
+data class Player(
+    var name: String=""
+)
 
 data class Game(
     var gameBoard: List<Int> = List(9) { 0 }, // 0: empty, 1: player1's move, 2: player2's move
@@ -75,12 +77,9 @@ class GameModel: ViewModel() {
 
         }
 
-        //lägg if stats, att ifall en person har kört en drag, och lagt en move, så att den andra personen inte kan lägga över
-        // så om det finns redan en move, kör bara return
-
         // Check columns
         for (i in 0..2) {
-            if (board[i] != 0 && board[i] == board[i * 3] && board[i] == board[i + 6]) {
+            if (board[i] != 0 && board[i] == board[i + 3] && board[i] == board[i + 6]) {
                 return board[i]
             }
         }
@@ -114,6 +113,10 @@ class GameModel: ViewModel() {
                 if (!myTurn) return
 
                 val list: MutableList<Int> = game.gameBoard.toMutableList()
+
+                if (list[cell]!=0){
+                    return
+                }
 
                 if (game.gameState == "player1_turn") {
                     list[cell] = 1

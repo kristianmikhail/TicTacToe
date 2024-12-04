@@ -47,25 +47,25 @@ fun LobbyScreen(navController: NavController, model: GameModel) {
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(players.entries.toList()) { (documentId, player) ->
-                if (documentId != model.localPlayerId.value) { //Don show yourself
+                if (documentId != model.localPlayerId.value) { //Don't show yourself
                     ListItem(
                         headlineText = {
                             Text("Player Name: ${player.name}")
                         },
                         supportingText = {
-                            Text("Status: ...")
+                            Text("Status: Online")
                         },
                         trailingContent = {
+
                             var hasGame = false
                             games.forEach { (gameId, game) ->
                                 if (game.player1Id == model.localPlayerId.value
-                                    && game.gameState == "invite"
+                                    && game.player2Id == documentId &&  game.gameState == "invite"
                                 ) {
                                     Text("Waiting for accept...")
                                     hasGame = true
                                 } else if (game.player2Id == model.localPlayerId.value
-                                    && game.gameState == "invite"
-                                ) {
+                                    && game.player1Id == documentId && game.gameState == "invite") {
                                     Button(onClick = {
                                         model.db.collection("games").document(gameId)
                                             .update("gameState", "player1_turn")
