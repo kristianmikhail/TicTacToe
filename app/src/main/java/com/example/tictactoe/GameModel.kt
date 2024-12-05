@@ -36,6 +36,8 @@ class GameModel: ViewModel() {
 
     fun initGame() {
 
+// här skapar jag tabeller både för players men även varje game. sparas såklart i firebase
+
         db.collection("players").addSnapshotListener { value, error ->
             if (error != null) {
                 return@addSnapshotListener
@@ -102,7 +104,9 @@ class GameModel: ViewModel() {
     }
 
 
-
+// update i firebase baserat på vad spelarna placeras sig, de olika index mellan 0-8
+// player1 placeras med nummer 1 och player 2 med 2 och allt sparas i firebase,
+//
     fun checkGameState(gameId: String?, cell: Int) {
 
         if (gameId != null) {
@@ -112,7 +116,7 @@ class GameModel: ViewModel() {
                 val myTurn = game.gameState == "player1_turn" && game.player1Id == localPlayerId.value || game.gameState == "player2_turn" && game.player2Id == localPlayerId.value
                 if (!myTurn) return
 
-                val list: MutableList<Int> = game.gameBoard.toMutableList()
+                val list: MutableList<Int> = game.gameBoard.toMutableList() // // Skapar en muterbar kopia av gameBoard för att kunna ändra innehållet.
 
                 if (list[cell]!=0){
                     return
@@ -132,6 +136,7 @@ class GameModel: ViewModel() {
                 }
 
                 val winner = checkWinner(list.toList())
+                // sen anropar vi checkwinner, om man uppfyller kraven så vinner den spelaren.
                 if (winner == 1) {
                     turn = "player1_won"
                 } else if (winner == 2) {
@@ -145,7 +150,7 @@ class GameModel: ViewModel() {
                         "gameBoard", list,
                         "gameState", turn
                     )
-
+                // Uppdaterar dokumentet med nytt gameBoard och gameState i databasen.
             }
         }
     }

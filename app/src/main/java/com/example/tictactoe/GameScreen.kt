@@ -1,10 +1,12 @@
 package com.example.tictactoe
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,14 +46,22 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
     if (gameId != null && games.containsKey(gameId)) {
         val game = games[gameId]!!
         Scaffold(
-            topBar = { TopAppBar(title = { Text("TicTacToe -$playerName") }) }
+            // Styling of the TopAppBar
+            topBar = {
+                TopAppBar(
+                    title = { Text("TicTacToe - $playerName", color = Color.White) }, // White text color
+                    colors = androidx.compose.material3.TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFF2196F3)) // Dark Blue background
+                )
+            }
         ) { innerPadding ->
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(innerPadding).fillMaxWidth()
-            )
-            {
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(Color(0xFF2196F3))
+            ) {
                 when (game.gameState) {
                     "player1_won", "player2_won", "draw" -> {
                         Text("Game Over!", style = MaterialTheme.typography.headlineMedium)
@@ -61,12 +72,17 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                         } else {
                             Text(
                                 "Player ${if (game.gameState == "player1_won") "1" else "2"} won!",
-                                style = MaterialTheme.typography.headlineMedium
-                            )
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = Color.Green)
                         }
-                        Button(onClick = {
-                            navController.navigate("lobby")
-                        }) { Text("Back to lobby") }
+
+                        Button(
+                            onClick = { navController.navigate("lobby") },
+                            modifier = Modifier.padding(8.dp), // Add padding around button
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1D4C6C)) // Dark blue button color
+                        ) {
+                            Text("Back to lobby", color = Color.White) // White text inside button
+                        }
                     }
 
                     else -> {
@@ -77,48 +93,47 @@ fun GameScreen(navController: NavController, model: GameModel, gameId: String?) 
                             if (myTurn)
                                 "Your turn!"
                             else "Wait for other player"
-                        Text(turn, style = MaterialTheme.typography.headlineMedium)
+                        Text(turn, style = MaterialTheme.typography.headlineMedium, color = Color(0xFF1D4C6C)) // Dark blue for turn text
                         Spacer(modifier = Modifier.padding(20.dp))
 
-                        Text("Player 1: ${players[game.player1Id]!!.name}")
-                        Text("Player 2: ${players[game.player2Id]!!.name}")
-                        //Text("State: ${game.gameState}")
-                        //Text("GameId: ${gameId}")
+                        Text("Player 1: ${players[game.player1Id]!!.name}", color = Color(0xFF1D4C6C)) // Dark blue for player text
+                        Text("Player 2: ${players[game.player2Id]!!.name}", color = Color(0xFF1D4C6C)) // Dark blue for player text
                     }
                 }
                 Spacer(modifier = Modifier.padding(20.dp))
 
-                //row * 3 + col
-                //i * 3 +j
 
-                for (i in 0 until  rows) {
+
+                for (i in 0 until rows) {
                     Row {
-                        for (j in 0 until  cols) {
+                        for (j in 0 until cols) {
                             Button(
                                 shape = RectangleShape,
-                                modifier = Modifier.size(100.dp).padding(2.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .padding(2.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1D4C6C)), // Dark blue button background
                                 onClick = {
                                     model.checkGameState(gameId, i * cols + j)
                                 }
                             ) {
-                                //Text (Cell${i*cols +j} Value: ${game.gameBoard[i* cols+j]}")
+                                // Icon or Text inside the button
                                 if (game.gameBoard[i * cols + j] == 1) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.close),
-                                        tint = Color.Red,
+                                        tint = Color.Red, // Red color for X icon
                                         contentDescription = "X",
                                         modifier = Modifier.size(48.dp)
                                     )
                                 } else if (game.gameBoard[i * cols + j] == 2) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.baseline_circle_24),
-                                        tint = Color.Blue,
-                                        contentDescription = "0",
+                                        tint = Color.Yellow, // color for O icon
+                                        contentDescription = "O",
                                         modifier = Modifier.size(48.dp)
                                     )
                                 } else {
-                                    Text("")
+                                    Text("") // Empty space if no player has clicked the button
                                 }
                             }
                         }
